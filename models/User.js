@@ -4,9 +4,9 @@ import sequelize from "../config/database";
 //The user model for the db
 const User = sequelize.define("User", {
     id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
         primaryKey: true,
-        autoIncrement: true
+        defaultValue: DataTypes.UUIDV4
     },
     username: {
         type: DataTypes.STRING,
@@ -36,6 +36,9 @@ const User = sequelize.define("User", {
         defaultValue: true,
         allowNull: false
     }
+}, {
+    timestamps: false,
+    tableName: "users"
 });
 
 export default User;
