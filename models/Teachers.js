@@ -1,8 +1,8 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/database";
 
-const Students = sequelize.define(
-  "Student",
+const Teachers = sequelize.define(
+  "Teachers",
   {
     id: {
       type: DataTypes.UUID,
@@ -17,9 +17,8 @@ const Students = sequelize.define(
   },
   {
     timestamps: false,
-    tableName: "students",
+    tableName: "teachers",
   },
 );
 
-export default Students;
-
+export default Teachers;
