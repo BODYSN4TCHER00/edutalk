@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize";
-import sequelize from "../config/database";
+import sequelize from "../config/db.js";
 
 const Message = sequelize.define(
   "Message",
@@ -12,7 +12,7 @@ const Message = sequelize.define(
     conversation_id: {
       type: DataTypes.UUID,
       references: {
-        model: "Conversation",
+        model: "conversations",
         key: "id",
       },
       onUpdate: "CASCADE",
@@ -22,7 +22,7 @@ const Message = sequelize.define(
     sender_id: {
       type: DataTypes.UUID,
       references: {
-        model: "User",
+        model: "users",
         key: "id",
       },
       onUpdate: "CASCADE",

@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize";
-import sequelize from "../config/database";
+import sequelize from "../config/db.js";
 
 const Student = sequelize.define(
   "Student",
@@ -8,7 +8,7 @@ const Student = sequelize.define(
       type: DataTypes.UUID,
       primaryKey: true,
       references: {
-        model: "User",
+        model: "users",
         key: "id",
       },
       onUpdate: "CASCADE",
@@ -27,6 +27,7 @@ const Student = sequelize.define(
     },
 
     createdAt: {
+      type: DataTypes.DATE,
         defaultValue: Date.now(),
         allowNull: false
     }

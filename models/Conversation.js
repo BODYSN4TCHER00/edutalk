@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize";
-import sequelize from "../config/database";
+import sequelize from "../config/db.js";
 
 const Conversation = sequelize.define(
   "Conversation",
@@ -12,7 +12,7 @@ const Conversation = sequelize.define(
     participant_one_id: {
       type: DataTypes.UUID,
       references: {
-        model: "User",
+        model: "users",
         key: "id",
       },
       onUpdate: "CASCADE",
@@ -22,7 +22,7 @@ const Conversation = sequelize.define(
     participant_two_id: {
       type: DataTypes.UUID,
       references: {
-        model: "User",
+        model: "users",
         key: "id",
       },
       onUpdate: "CASCADE",

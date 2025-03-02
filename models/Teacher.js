@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize";
-import sequelize from "../config/database";
+import sequelize from "../config/db.js";
 
 const Teacher = sequelize.define(
   "Teacher",
@@ -8,7 +8,7 @@ const Teacher = sequelize.define(
       type: DataTypes.UUID,
       primaryKey: true,
       references: {
-        model: "User",
+        model: "users",
         key: "id",
       },
       onUpdate: "CASCADE",
