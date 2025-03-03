@@ -38,6 +38,12 @@ const Message = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
       defaultValue: Date.now()
+    },
+
+    status: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true
     }
   },
   {
