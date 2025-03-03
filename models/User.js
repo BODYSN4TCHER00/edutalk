@@ -38,6 +38,11 @@ const User = sequelize.define(
       defaultValue: true,
       allowNull: false,
     },
+    type: {
+      type: DataTypes.STRING,
+      defaultValue: "student",
+      allowNull: false
+    }
   },
   {
     timestamps: false,
