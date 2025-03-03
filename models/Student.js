@@ -15,12 +15,6 @@ const Student = sequelize.define(
       onDelete: "CASCADE",
     },
 
-    enrollment: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true
-    },
-
     grade: {
         type: DataTypes.STRING,
         allowNull: false

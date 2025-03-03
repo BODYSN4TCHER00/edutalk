@@ -7,6 +7,7 @@ const Message = sequelize.define(
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
     },
 
     conversation_id: {

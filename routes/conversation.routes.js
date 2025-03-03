@@ -22,6 +22,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+//Search for a user's conversations
 router.get("/user/:user_id", async (req, res) => {
   try {
     const conversations = await Conversation.findAll({

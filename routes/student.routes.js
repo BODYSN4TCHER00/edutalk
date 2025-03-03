@@ -22,21 +22,6 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
-  try {
-    const { id, enrollment, grade } = req.body;
-    const student = await Student.create({
-      id,
-      enrollment,
-      grade,
-      createdAt: new Date().toISOString(), // Guarda la fecha en formato ISO
-    });
-    res.status(201).json(student);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
 router.put("/:id", async (req, res) => {
   try {
     const student = await Student.findByPk(req.params.id);

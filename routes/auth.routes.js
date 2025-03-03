@@ -37,11 +37,10 @@ router.post("/register", async (req, res) => {
     });
 
     if (type === "student") {
-      if (!enrollment || !grade) return res.status(400).json({ error: "Datos de estudiante incompletos" });
+      if (!grade) return res.status(400).json({ error: "Datos de estudiante incompletos" });
 
       await Student.create({
         id: newUser.id,
-        enrollment,
         grade,
       });
 
@@ -72,14 +71,14 @@ router.post("/login", async (req, res) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ where: { email } });
-    if (!user) return res.status(400).json({ error: "Credenciales incorrectas" });
+    if (!user) return res.status(400).json({ error: "Wrong credentials" });
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ error: "Credenciales incorrectas" });
+    if (!isMatch) return res.status(400).json({ error: "Wrong credentials" });
 
     const token = generateToken(user);
 
-    res.json({ message: "Inicio de sesión exitoso", token });
+    res.json({ message: "Sign in succesfully", token });
 
   } catch (error) {
     res.status(500).json({ error: error.message });

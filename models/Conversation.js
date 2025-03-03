@@ -7,6 +7,7 @@ const Conversation = sequelize.define(
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
     },
 
     participant_one_id: {
