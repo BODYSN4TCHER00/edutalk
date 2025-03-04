@@ -28,7 +28,7 @@ app.use('/api/conversation/', conversationRoutes);
 
 const startServer = async () => {
   try {
-    await sequelize.sync({force: true});
+    await sequelize.sync({alter: true});
     console.log("Connected to db");
     
     await connectRabbitMQ("Connected to rabbitmq");

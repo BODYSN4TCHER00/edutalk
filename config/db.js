@@ -1,4 +1,4 @@
-import "dotenv/config.js"
+import "dotenv/config.js";
 import { Sequelize } from "sequelize";
 
 const sequelize = new Sequelize(
@@ -8,7 +8,13 @@ const sequelize = new Sequelize(
     {
         host: process.env.DB_HOST,
         dialect: process.env.DB_DIALECT,
-        logging: false
+        logging: false,
+        dialectOptions: {
+            ssl: {
+                require: true,
+                rejectUnauthorized: false
+            }
+        }
     }
 );
 
