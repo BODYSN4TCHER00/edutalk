@@ -1,5 +1,6 @@
 import express from 'express';
 import Message from '../models/Message.js';
+import { sendToQueue } from '../config/rabbitmq.js';
 
 const router = express.Router();
 
@@ -26,14 +27,17 @@ router.get("/:id", async (req, res) => {
 
   router.post("/", async (req, res) => {
     try {
-      const { id, conversation_id, sender_id, content } = req.body;
+      const { conversation_id, sender_id, content } = req.body;
+      
       const message = await Message.create({
-        id,
         conversation_id,
         sender_id,
         content,
-        sent_at: new Date().toISOString(), // Guarda la fecha en formato ISO
+        sent_at: new Date().toISOString(),
       });
+
+      await sendToQueue(message);
+      
       res.status(201).json(message);
     } catch (error) {
       res.status(500).json({ error: error.message });

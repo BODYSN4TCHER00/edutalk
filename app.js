@@ -10,9 +10,13 @@ import "./models/Conversation.js";
 import "./models/Message.js";
 import "./models/Student.js";
 import "./models/Teacher.js";
+import { connectRabbitMQ } from './config/rabbitmq.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.SERVER_PORT;
 
 //Routes
 app.use(express.json());
@@ -22,10 +26,18 @@ app.use('/api/teacher/', teacherRoutes);
 app.use('/api/message/', messageRoutes);
 app.use('/api/conversation/', conversationRoutes);
 
-sequelize
-  .sync({ force: true }) // Esto eliminará y volverá a crear las tablas en cada reinicio
-  .then(() => {
+const startServer = async () => {
+  try {
+    await sequelize.sync({force: true});
     console.log("Connected to db");
+    
+    await connectRabbitMQ("Connected to rabbitmq");
+    console.log();
+    
     app.listen(PORT, () => console.log(`Server running on ${PORT}`));
-  })
-  .catch((error) => console.error("Error al conectar con la base de datos:", error));
+  } catch (error) {
+    console.error("Error running server:", error);
+  }
+};
+
+startServer();

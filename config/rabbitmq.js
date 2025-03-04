@@ -1,25 +1,33 @@
 import amqp from "amqplib";
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 let channel;
 
 export const connectRabbitMQ = async () => {
   try {
-    const connection = await amqp.connect("amqp://localhost"); // Cambia la URL si es necesario
+    const connection = await amqp.connect(process.env.RABBITMQ_URL);
     channel = await connection.createChannel();
-    await channel.assertQueue("messages_queue", { durable: true });
     console.log("Connected to RabbitMQ");
   } catch (error) {
     console.error("Error connecting to RabbitMQ:", error);
   }
 };
 
+const getQueueName = (conversation_id) => `chat.conversation.${conversation_id}`;
+
 export const sendToQueue = async (message) => {
   if (!channel) {
     console.error("Connection error to RabbitMQ");
     return;
   }
-  channel.sendToQueue("messages_queue", Buffer.from(JSON.stringify(message)), {
+
+  const queueName = getQueueName(message.conversation_id);
+  await channel.assertQueue(queueName, { durable: true });
+
+  channel.sendToQueue(queueName, Buffer.from(JSON.stringify(message)), {
     persistent: true,
   });
-  console.log("Message sended:", message);
+  console.log(`Message sended: ${queueName}`, message);
 };
