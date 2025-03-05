@@ -1,7 +1,8 @@
 import express from "express";
 import Conversation from "../models/Conversation.js";
-import Op from "sequelize";
+import Op, { Sequelize } from "sequelize";
 import { verifyToken } from "../config/jwt.js";
+import validator from "validator";
 
 const router = express.Router();
 
@@ -26,19 +27,28 @@ router.get("/:id", verifyToken, async (req, res) => {
 
 router.get("/user/:user_id", verifyToken, async (req, res) => {
   try {
+    const userId = req.params.user_id;
+
+    if (!userId) {
+      return res.status(400).json({ error: "Id is necessary" });
+    }
+
     const conversations = await Conversation.findAll({
-      where: {
-        [Op.or]: [
-          { participant_one_id: req.params.user_id },
-          { participant_two_id: req.params.user_id }
-        ]
-      }
+      where: Sequelize.literal(`"participant_one_id" = '${userId}' OR "participant_two_id" = '${userId}'`)
     });
+
+    if (!conversations || conversations.length === 0) {
+      return res.status(404).json({ error: "Conversation was not found" });
+    }
+
     res.json(conversations);
   } catch (error) {
+    console.error("Error getting conversations:", error);
     res.status(500).json({ error: error.message });
   }
 });
+
+
 
 router.post("/", verifyToken, async (req, res) => {
   try {
