@@ -1,6 +1,6 @@
 import express from "express";
 import Teacher from "../models/Teacher.js";
-import { verifyToken } from "../middlewares/authMiddleware.js"; // Importa el middleware de verificación
+import { verifyToken } from "../config/jwt.js";
 
 const router = express.Router();
 
