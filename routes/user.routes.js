@@ -4,10 +4,22 @@ import User from "../models/User.js";
 
 const router = express.Router();
 
+router.get("/", async (req, res) => {
+  try {
+    const users = await User.findAll({
+      attributes: { exclude: ["password"] },
+    });
+
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 router.get("/:id", async (req, res) => {
   try {
     const user = await User.findByPk(req.params.id, {
-      attributes: { exclude: ["password"] }, // No devolver la contraseña
+      attributes: { exclude: ["password"] },
     });
 
     if (!user) return res.status(404).json({ error: "Usuario no encontrado" });
