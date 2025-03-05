@@ -1,6 +1,5 @@
 import express from "express";
 import Message from "../models/Message.js";
-import { sendToQueue } from "../config/rabbitmq.js";
 import { verifyToken } from "../config/jwt.js";
 
 const router = express.Router();
@@ -38,7 +37,7 @@ router.post("/", verifyToken, async (req, res) => {
       sent_at: new Date().toISOString(),
     });
 
-    await sendToQueue(message);
+    req.io.emit(`chat.conversation.${conversation_id}`, message);
     
     res.status(201).json(message);
   } catch (error) {
