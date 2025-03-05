@@ -1,9 +1,11 @@
 import express from "express";
 import Teacher from "../models/Teacher.js";
+import { verifyToken } from "../middlewares/authMiddleware.js"; // Importa el middleware de verificación
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+// Obtener todos los profesores (protegido)
+router.get("/", verifyToken, async (req, res) => {
   try {
     const teachers = await Teacher.findAll();
     res.json(teachers);
@@ -12,7 +14,8 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+// Obtener un profesor por ID (protegido)
+router.get("/:id", verifyToken, async (req, res) => {
   try {
     const teacher = await Teacher.findByPk(req.params.id);
     if (!teacher) return res.status(404).json({ error: "Profesor no encontrado" });
@@ -22,7 +25,8 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+// Crear un nuevo profesor (protegido)
+router.post("/", verifyToken, async (req, res) => {
   try {
     const { id, employee_id, department } = req.body;
     const teacher = await Teacher.create({
@@ -37,7 +41,8 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+// Actualizar un profesor (protegido)
+router.put("/:id", verifyToken, async (req, res) => {
   try {
     const teacher = await Teacher.findByPk(req.params.id);
     if (!teacher) return res.status(404).json({ error: "Profesor no encontrado" });
@@ -49,7 +54,8 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+// Eliminar un profesor (soft delete, protegido)
+router.delete("/:id", verifyToken, async (req, res) => {
   try {
     const teacher = await Teacher.findByPk(req.params.id);
     if (!teacher) return res.status(404).json({ error: "Profesor no encontrado" });

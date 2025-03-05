@@ -1,9 +1,11 @@
 import express from "express";
 import Student from "../models/Student.js";
+import { verifyToken } from "../middlewares/authMiddleware.js"; // Importa el middleware
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+// Obtener todos los estudiantes (protegido)
+router.get("/", verifyToken, async (req, res) => {
   try {
     const students = await Student.findAll();
     res.json(students);
@@ -12,7 +14,8 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+// Obtener un estudiante por ID (protegido)
+router.get("/:id", verifyToken, async (req, res) => {
   try {
     const student = await Student.findByPk(req.params.id);
     if (!student) return res.status(404).json({ error: "Estudiante no encontrado" });
@@ -22,7 +25,8 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+// Actualizar un estudiante (protegido)
+router.put("/:id", verifyToken, async (req, res) => {
   try {
     const student = await Student.findByPk(req.params.id);
     if (!student) return res.status(404).json({ error: "Estudiante no encontrado" });
@@ -34,7 +38,8 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+// Eliminar un estudiante (soft delete, protegido)
+router.delete("/:id", verifyToken, async (req, res) => {
   try {
     const student = await Student.findByPk(req.params.id);
     if (!student) return res.status(404).json({ error: "Estudiante no encontrado" });

@@ -1,9 +1,11 @@
 import express from "express";
 import Conversation from "../models/Conversation.js";
+import Op from "sequelize";
+import { verifyToken } from "../middlewares/authMiddleware.js"; // Importa el middleware
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/", verifyToken, async (req, res) => {
   try {
     const conversations = await Conversation.findAll();
     res.json(conversations);
@@ -12,7 +14,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", verifyToken, async (req, res) => {
   try {
     const conversation = await Conversation.findByPk(req.params.id);
     if (!conversation) return res.status(404).json({ error: "Conversación no encontrada" });
@@ -22,8 +24,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-//Search for a user's conversations
-router.get("/user/:user_id", async (req, res) => {
+router.get("/user/:user_id", verifyToken, async (req, res) => {
   try {
     const conversations = await Conversation.findAll({
       where: {
@@ -39,11 +40,10 @@ router.get("/user/:user_id", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", verifyToken, async (req, res) => {
   try {
     const { id, participant_one_id, participant_two_id } = req.body;
 
-    // Verificar que los dos participantes sean diferentes
     if (participant_one_id === participant_two_id) {
       return res.status(400).json({ error: "Los participantes deben ser diferentes" });
     }
@@ -52,7 +52,7 @@ router.post("/", async (req, res) => {
       id,
       participant_one_id,
       participant_two_id,
-      created_at: new Date().toISOString(), // Guarda la fecha en formato ISO
+      created_at: new Date().toISOString(),
     });
 
     res.status(201).json(conversation);
@@ -61,12 +61,12 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", verifyToken, async (req, res) => {
   try {
     const conversation = await Conversation.findByPk(req.params.id);
     if (!conversation) return res.status(404).json({ error: "Conversación no encontrada" });
 
-    await conversation.update({ deleted_at: new Date().toISOString() }); // Soft delete
+    await conversation.update({ deleted_at: new Date().toISOString() });
     res.json({ message: "Conversación eliminada correctamente (soft delete)" });
   } catch (error) {
     res.status(500).json({ error: error.message });
