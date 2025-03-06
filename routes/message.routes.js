@@ -4,7 +4,6 @@ import { verifyToken } from "../config/jwt.js";
 
 const router = express.Router();
 
-// Obtener un mensaje por ID (protegido)
 router.get("/:id", verifyToken, async (req, res) => {
   try {
     const message = await Message.findByPk(req.params.id);

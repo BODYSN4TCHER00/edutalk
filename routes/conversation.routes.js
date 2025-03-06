@@ -47,8 +47,6 @@ router.get("/user/:user_id", verifyToken, async (req, res) => {
   }
 });
 
-
-
 router.post("/", verifyToken, async (req, res) => {
   try {
     const { id, participant_one_id, participant_two_id } = req.body;
