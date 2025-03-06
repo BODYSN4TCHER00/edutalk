@@ -31,20 +31,26 @@ const Message = sequelize.define(
     },
 
     content: {
-        type: DataTypes.STRING,
-        allowNull: false
+      type: DataTypes.STRING,
+      allowNull: false,
     },
 
     sent_at: {
       type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: Date.now()
+      defaultValue: Date.now(),
     },
 
     status: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: true
+      defaultValue: true,
+    },
+
+    state: {
+      type: DataTypes.ENUM("Unread", "Seen", "Replied", "Pending"),
+      allowNull: false,
+      defaultValue: "Unread",
     }
   },
   {

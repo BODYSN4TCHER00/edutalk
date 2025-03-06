@@ -57,4 +57,28 @@ router.delete("/:id", verifyToken, async (req, res) => {
   }
 });
 
+router.patch("/state/:id", verifyToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { state } = req.body;
+
+    const validStates = ["Unread", "Seen", "Replied", "Pending"];
+    if (!validStates.includes(state)) {
+      return res.status(400).json({ error: "Invalid state" });
+    }
+
+    const message = await Message.findByPk(id);
+    if (!message) {
+      return res.status(404).json({ error: "Message not found" });
+    }
+
+    await message.update({ state });
+
+    res.json({ message: "Message state updated successfully", updatedMessage: message });
+  } catch (error) {
+    console.error("Error updating message state:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 export default router;
