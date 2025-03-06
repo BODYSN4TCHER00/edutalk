@@ -1,6 +1,7 @@
 import express from "express";
 import Conversation from "../models/Conversation.js";
 import { verifyToken } from "../config/jwt.js";
+import { Sequelize } from "sequelize";
 
 const router = express.Router();
 
