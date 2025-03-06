@@ -14,6 +14,7 @@ import "./models/Message.js";
 import "./models/Student.js";
 import "./models/Teacher.js";
 import dotenv from 'dotenv';
+import Message from './models/Message.js';
 
 dotenv.config();
 
@@ -44,6 +45,24 @@ app.use('/api/conversation/', conversationRoutes);
 
 io.on("connection", (socket) => {
   console.log("Client connected: ", socket.io);
+
+  socket.on('chat.message.state', async (data) => {
+    try {
+      const { message_id, state } = data;
+      
+      // Actualizar en la base de datos
+      const message = await Message.findByPk(message_id);
+      if (message) {
+        message.state = state;
+        await message.save();
+        
+        // Re-emitir a todos los clientes
+        io.emit('chat.message.state', data);
+      }
+    } catch (error) {
+      console.error('Error actualizando estado del mensaje:', error);
+    }
+  });
 
   socket.on("disconnect", () => {
     console.log("Cliente desconectado:", socket.id);

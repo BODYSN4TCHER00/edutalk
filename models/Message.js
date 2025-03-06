@@ -48,7 +48,7 @@ const Message = sequelize.define(
     },
 
     state: {
-      type: DataTypes.ENUM("Unread", "Seen", "Replied", "Pending"),
+      type: DataTypes.ENUM("Unread", "Seen", "Pending"),
       allowNull: false,
       defaultValue: "Unread",
     }

@@ -61,7 +61,7 @@ router.patch("/state/:id", verifyToken, async (req, res) => {
     const { id } = req.params;
     const { state } = req.body;
 
-    const validStates = ["Unread", "Seen", "Replied", "Pending"];
+    const validStates = ["Unread", "Seen", "Pending"];
     if (!validStates.includes(state)) {
       return res.status(400).json({ error: "Invalid state" });
     }
@@ -72,6 +72,12 @@ router.patch("/state/:id", verifyToken, async (req, res) => {
     }
 
     await message.update({ state });
+
+    req.io.emit('chat.message.state', {
+      message_id: id,
+      state,
+      conversation_id: message.conversation_id
+    });
 
     res.json({ message: "Message state updated successfully", updatedMessage: message });
   } catch (error) {
