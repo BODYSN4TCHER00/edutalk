@@ -73,7 +73,7 @@ router.patch("/mark-as-read/:userId/:conversationId", verifyToken, async (req, r
       }
     );
 
-    req.io.emit(`chat.messages.read.${userId}`, {
+    req.io.emit(`chat.messages.read.${conversationId}`, {
       user_id: userId,
       state: "Seen"
     });
