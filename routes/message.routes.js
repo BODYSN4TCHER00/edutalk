@@ -1,6 +1,7 @@
 import express from "express";
 import Message from "../models/Message.js";
 import { verifyToken } from "../config/jwt.js";
+import { Op } from "sequelize";
 
 const router = express.Router();
 
@@ -55,6 +56,39 @@ router.delete("/:id", verifyToken, async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+router.patch("/mark-as-read/:userId/:conversationId", verifyToken, async (req, res) => {
+  try {
+    const { userId, conversationId } = req.params;
+
+    // Actualizar los mensajes no leídos de la conversación específica
+    const [updatedCount] = await Message.update(
+      { state: "Seen" },
+      {
+        where: {
+          state: "Unread",              // Solo los mensajes "Unread"
+          sender_id: { [Op.ne]: userId }, // Excluir los mensajes enviados por el usuario
+          conversation_id: conversationId, // Filtrar por la conversación específica
+        },
+      }
+    );
+
+    req.io.emit(`chat.messages.read.${userId}`, {
+      user_id: userId,
+      state: true
+    });
+
+    if (updatedCount === 0) {
+      return res.status(404).json({ message: "No hay mensajes pendientes por leer en esta conversación" });
+    }
+
+    res.json({ message: "Mensajes de la conversación actualizados correctamente", updatedCount });
+  } catch (error) {
+    console.error("Error actualizando los mensajes:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 
 router.patch("/state/:id", verifyToken, async (req, res) => {
   try {
