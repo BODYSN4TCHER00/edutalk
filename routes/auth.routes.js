@@ -87,7 +87,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-app.post("/get-signature", verifyToken, (req, res) => {
+router.post("/get-signature", verifyToken, (req, res) => {
   const timestamp = Math.round(new Date().getTime() / 1000);
   const params = { timestamp, folder: "tareas" };
 
