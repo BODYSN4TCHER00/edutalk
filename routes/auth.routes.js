@@ -5,6 +5,8 @@ import dotenv from "dotenv";
 import User from "../models/User.js";
 import Student from "../models/Student.js";
 import Teacher from "../models/Teacher.js";
+import cloudinary from "../config/cloudinary.js";
+import { verifyToken } from "../config/jwt.js";
 
 dotenv.config();
 const router = express.Router();
@@ -83,6 +85,15 @@ router.post("/login", async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
+});
+
+app.post("/get-signature", verifyToken, (req, res) => {
+  const timestamp = Math.round(new Date().getTime() / 1000);
+  const params = { timestamp, folder: "tareas" };
+
+  const signature = cloudinary.utils.api_sign_request(params, process.env.CLOUDINARY_API_SECRET);
+
+  res.json({ timestamp, signature, cloudName: process.env.CLOUDINARY_CLOUD_NAME });
 });
 
 export default router;
