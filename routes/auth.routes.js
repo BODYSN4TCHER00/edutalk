@@ -1,24 +1,17 @@
 import express from "express";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import User from "../models/User.js";
 import Student from "../models/Student.js";
 import Teacher from "../models/Teacher.js";
 import cloudinary from "../config/cloudinary.js";
-import { verifyToken } from "../config/jwt.js";
+import { verifyToken, generateToken } from "../config/jwt.js";
 
 dotenv.config();
 const router = express.Router();
 const SECRET_KEY = process.env.JWT_SECRET || "tu_secreto_super_seguro";
 
-const generateToken = (user) => {
-  return jwt.sign(
-    { id: user.id, email: user.email, type: user.type },
-    SECRET_KEY,
-    { expiresIn: "7d" }
-  );
-};
+let sessions = {};
 
 router.post("/register", async (req, res) => {
   try {
@@ -78,7 +71,14 @@ router.post("/login", async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ error: "Wrong credentials" });
 
+    //Verifica si ya hay una sesión
+    if (sessions[user.id]) {
+      return res.status(400).json({ error: "Ya hay una sesión"});
+    }
+
     const token = generateToken(user);
+
+    sessions[user.id] = token;
 
     res.json({ message: "Sign in succesfully", token });
 
@@ -94,6 +94,18 @@ router.post("/get-signature", verifyToken, (req, res) => {
   const signature = cloudinary.utils.api_sign_request(params, process.env.CLOUDINARY_API_SECRET);
 
   res.json({ timestamp, signature, cloudName: process.env.CLOUDINARY_CLOUD_NAME });
+});
+
+router.post("/logout", verifyToken, (req, res) => {
+  const userId = req.user.id;  // Obtenemos el ID del usuario desde el token
+
+  // Eliminamos la sesión del objeto sessions
+  if (sessions[userId]) {
+    delete sessions[userId];
+    return res.status(200).json({ message: "Sesión cerrada exitosamente" });
+  }
+
+  return res.status(400).json({ error: "No se encontró sesión activa para cerrar" });
 });
 
 export default router;
