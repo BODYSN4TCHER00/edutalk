@@ -7,12 +7,20 @@ import authRoutes from './routes/auth.routes.js'
 import teacherRoutes from './routes/teacher.routes.js';
 import messageRoutes from './routes/message.routes.js';
 import conversationRoutes from './routes/conversation.routes.js'
+import assignmentRoutes from './routes/assigment.routes.js';
+import courseRoutes from './routes/course.routes.js';
+import enrollmentRoutes from './routes/enrollment.routes.js';
+import submissionRoutes from './routes/submission.routes.js';
 import sequelize from './config/db.js';
 import "./models/User.js";
 import "./models/Conversation.js";
 import "./models/Message.js";
 import "./models/Student.js";
 import "./models/Teacher.js";
+import "./models/Assignment.js";
+import "./models/Course.js";
+import "./models/Enrollment.js";
+import "./models/Submission.js";
 import dotenv from 'dotenv';
 import Message from './models/Message.js';
 
@@ -42,6 +50,10 @@ app.use('/api/auth/', authRoutes);
 app.use('/api/teacher/', teacherRoutes);
 app.use('/api/message/', messageRoutes);
 app.use('/api/conversation/', conversationRoutes);
+app.use('/api/assignment/', assignmentRoutes);
+app.use('/api/course/', courseRoutes);
+app.use('/api/enrollment/', enrollmentRoutes);
+app.use('/api/submission/', submissionRoutes);
 
 io.on("connection", (socket) => {
   console.log("Client connected: ", socket.io);
