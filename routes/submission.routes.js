@@ -89,4 +89,25 @@ router.delete("/:id", verifyToken, async (req, res) => {
   }
 });
 
+router.get("/check-submission", verifyToken, async (req, res) => {
+  try {
+    const { student_id, assignment_id } = req.query;  // Recibimos los parámetros en la query
+
+    // Verificamos si ya existe una entrega para ese estudiante y tarea
+    const submission = await Submission.findOne({
+      where: { student_id, assignment_id },
+    });
+
+    if (submission) {
+      // Si existe la entrega, devolvemos un mensaje indicando que ya entregó la tarea
+      return res.json({ submitted: true, submission });
+    }
+
+    // Si no existe, devolvemos false
+    res.json({ submitted: false });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 export default router;
