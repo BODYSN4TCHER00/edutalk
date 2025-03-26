@@ -2,6 +2,7 @@ import express from "express";
 import Course from "../models/Course.js";
 import { verifyToken } from "../config/jwt.js";
 import { Op } from "sequelize";
+import sequelize from "../config/db.js";
 
 const router = express.Router();
 
