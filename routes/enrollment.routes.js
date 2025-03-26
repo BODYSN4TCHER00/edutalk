@@ -1,5 +1,6 @@
 import express from "express";
 import Enrollment from "../models/Enrollment.js";
+import Course from "../models/Course.js";
 import { verifyToken } from "../config/jwt.js";
 
 const router = express.Router();
@@ -28,14 +29,22 @@ router.get("/course/:course_id", verifyToken, async (req, res) => {
   }
 });
 
-// Inscribir un estudiante en un curso
+// Inscribir un estudiante en un curso usando el código de la clase
 router.post("/", verifyToken, async (req, res) => {
   try {
-    const { student_id, course_id } = req.body;
+    const { student_id, course_code } = req.body;
 
+    // Buscar el curso por su código
+    const course = await Course.findOne({ where: { code: course_code } });
+
+    if (!course) {
+      return res.status(404).json({ error: "Curso no encontrado" });
+    }
+
+    // Crear la inscripción con el course_id obtenido
     const enrollment = await Enrollment.create({
       student_id,
-      course_id,
+      course_id: course.id,
       status: true,
       createdAt: new Date(),
     });
