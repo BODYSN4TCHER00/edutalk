@@ -52,7 +52,7 @@ router.get("/course/:course_id", verifyToken, async (req, res) => {
 
 router.post("/", verifyToken, async (req, res) => {
   try {
-    const { title, description, course_id, delivery_date } = req.body;
+    const { title, description, course_id, delivery_date, file_url } = req.body;
 
     const assignment = await Assignment.create({
       title,
