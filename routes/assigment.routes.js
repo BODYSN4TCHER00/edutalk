@@ -1,5 +1,7 @@
 import express from "express";
 import Assignment from "../models/Assignment.js";
+import Course from "../models/Course.js";
+import User from "../models/User.js";
 import { verifyToken } from "../config/jwt.js";
 import { Op } from "sequelize";
 
@@ -7,13 +9,35 @@ const router = express.Router();
 
 router.get("/:id", verifyToken, async (req, res) => {
   try {
+    // Buscar la tarea por el id
     const assignment = await Assignment.findByPk(req.params.id);
     if (!assignment) return res.status(404).json({ error: "Tarea no encontrada" });
-    res.json(assignment);
+
+    // Obtener el course_id (id de la clase) y teacher_id (id del maestro) de la tarea
+    const { course_id } = assignment;
+
+    // Buscar los datos de la clase usando el course_id
+    const course = await Course.findByPk(course_id); // Suponiendo que tienes un modelo Course
+    if (!course) return res.status(404).json({ error: "Clase no encontrada" });
+
+    // Obtener el course_id (id de la clase) y teacher_id (id del maestro) de la tarea
+    const { teacher_id } = course;
+
+    // Buscar los datos del maestro usando el teacher_id
+    const teacher = await User.findByPk(teacher_id); // Suponiendo que tienes un modelo Teacher
+    if (!teacher) return res.status(404).json({ error: "Maestro no encontrado" });
+
+    // Devolver la tarea junto con la información adicional de la clase y el maestro
+    res.json({
+      ...assignment.toJSON(),
+      courseName: course.name, // Asegúrate de que "name" es el campo correcto para el nombre de la clase
+      teacherName: `${teacher.name} ${teacher.lastname}`, // Asegúrate de que "name" es el campo correcto para el nombre del maestro
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
+
 
 router.get("/course/:course_id", verifyToken, async (req, res) => {
   try {

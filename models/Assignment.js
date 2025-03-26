@@ -45,7 +45,7 @@ const Assignment = sequelize.define(
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: true,
-      },
+    },
     
   },
   {
