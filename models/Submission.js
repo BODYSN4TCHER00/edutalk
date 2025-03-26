@@ -41,7 +41,7 @@ const Submission = sequelize.define(
         allowNull: false
     },
 
-    calification: {
+    grade: {
         type: DataTypes.INTEGER,
         allowNull: true,
     },

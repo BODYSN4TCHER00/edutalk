@@ -36,6 +36,11 @@ const Assignment = sequelize.define(
         allowNull: false
     },
 
+    file_url: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
+      allowNull: true,
+    },
+
     delivery_date: {
       type: DataTypes.DATE,
       allowNull: false

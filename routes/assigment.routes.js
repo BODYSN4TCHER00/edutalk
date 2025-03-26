@@ -60,6 +60,7 @@ router.post("/", verifyToken, async (req, res) => {
       course_id,
       delivery_date,
       createdAt: new Date(),
+      file_url,
       status: true,
     });
 
