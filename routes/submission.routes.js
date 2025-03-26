@@ -28,6 +28,27 @@ router.get("/assignment/:assignment_id", verifyToken, async (req, res) => {
   }
 });
 
+// Obtener la entrega de un estudiante específico para una tarea específica
+router.get("/student/:student_id/assignment/:assignment_id", verifyToken, async (req, res) => {
+  try {
+    const { student_id, assignment_id } = req.params;
+
+    // Buscar la entrega específica
+    const submission = await Submission.findOne({
+      where: { student_id, assignment_id },
+    });
+
+    if (!submission) {
+      return res.status(404).json({ error: "Entrega no encontrada" });
+    }
+
+    res.json(submission);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
 // Obtener una entrega específica
 router.get("/:id", verifyToken, async (req, res) => {
   try {
