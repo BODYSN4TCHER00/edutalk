@@ -47,10 +47,10 @@ const Submission = sequelize.define(
     },
 
     status: {
-        type: DataTypes.BOOLEAN,
+        type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: true,
-      },
+        defaultValue: 'pendiente'
+    },
     
   },
   {
