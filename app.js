@@ -11,6 +11,7 @@ import assignmentRoutes from './routes/assigment.routes.js';
 import courseRoutes from './routes/course.routes.js';
 import enrollmentRoutes from './routes/enrollment.routes.js';
 import submissionRoutes from './routes/submission.routes.js';
+import commentsRoutes from './routes/comments.routes.js';
 import sequelize from './config/db.js';
 import "./models/User.js";
 import "./models/Conversation.js";
@@ -54,6 +55,7 @@ app.use('/api/assignment/', assignmentRoutes);
 app.use('/api/course/', courseRoutes);
 app.use('/api/enrollment/', enrollmentRoutes);
 app.use('/api/submission/', submissionRoutes);
+app.use('/api/comments/', commentsRoutes);
 
 io.on("connection", (socket) => {
   console.log("Client connected: ", socket.io);
