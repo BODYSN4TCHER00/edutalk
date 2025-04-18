@@ -70,7 +70,6 @@ router.post("/", verifyToken, async (req, res) => {
       assignment_id,
       file_url,
       createdAt: new Date(),
-      status: true,
     });
 
     res.status(201).json(submission);

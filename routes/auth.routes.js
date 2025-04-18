@@ -66,14 +66,14 @@ router.post("/login", async (req, res) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ where: { email } });
-    if (!user) return res.status(400).json({ error: "Wrong credentials" });
+    if (!user) return res.status(400).json({ error: "credenciales incorrectas" });
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ error: "Wrong credentials" });
+    if (!isMatch) return res.status(400).json({ error: "credenciales incorrectas" });
 
     //Verifica si ya hay una sesión
     if (sessions[user.id]) {
-      return res.status(400).json({ error: "Ya hay una sesión"});
+      return res.status(400).json({ error: "Ya hay una sesión activa"});
     }
 
     const token = generateToken(user);
