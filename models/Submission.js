@@ -49,7 +49,10 @@ const Submission = sequelize.define(
     status: {
         type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: 'pendiente'
+        defaultValue: 'PENDING',
+        validate: {
+            isIn: [['PENDING', 'SUBMITTED', 'GRADED', 'RETURNED', 'REJECTED']],
+        },
     },
     
   },
