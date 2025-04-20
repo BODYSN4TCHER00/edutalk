@@ -9,7 +9,11 @@ router.get("/assignment/:assignment_id", verifyToken, async (req, res) => {
   try {
     const comments = await Comment.findAll({
       where: { assignment_id: req.params.assignment_id },
-      order: [['createdAt', 'ASC']] // Ordenados por fecha de creación
+      include: [{
+        model: User,
+        attributes: ['id', 'name']
+      }],
+      order: [['createdAt', 'ASC']]
     });
     res.json(comments);
   } catch (error) {
@@ -21,7 +25,7 @@ router.get("/assignment/:assignment_id", verifyToken, async (req, res) => {
 router.post("/", verifyToken, async (req, res) => {
   try {
     const { content, assignment_id } = req.body;
-    const author_id = req.user.id; // Obtenido del token JWT
+    const author_id = req.user.id;
 
     const comment = await Comment.create({
       content,
