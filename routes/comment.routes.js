@@ -1,9 +1,11 @@
 import express from "express";
+import User from "../models/User.js"; 
 import Comment from "../models/Comment.js";
 import { verifyToken } from "../config/jwt.js";
 
 const router = express.Router();
 
+// Obtener todos los comentarios de una tarea
 // Obtener todos los comentarios de una tarea
 router.get("/assignment/:assignment_id", verifyToken, async (req, res) => {
   try {
@@ -11,9 +13,10 @@ router.get("/assignment/:assignment_id", verifyToken, async (req, res) => {
       where: { assignment_id: req.params.assignment_id },
       include: [{
         model: User,
-        attributes: ['id', 'name']
+        as: "Author",
+        attributes: ["id", "name"]
       }],
-      order: [['createdAt', 'ASC']]
+      order: [["createdAt", "ASC"]]
     });
     res.json(comments);
   } catch (error) {
