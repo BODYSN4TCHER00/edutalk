@@ -1,6 +1,8 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
 
+Comment.belongsTo(User, { foreignKey: 'author_id' });
+
 const Comment = sequelize.define(
   "Comment",
   {
