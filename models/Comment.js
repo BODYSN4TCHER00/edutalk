@@ -1,6 +1,5 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
-import User from "./User.js";
 
 const Comment = sequelize.define(
   "Comment",
@@ -38,10 +37,5 @@ const Comment = sequelize.define(
     tableName: "comments",
   }
 );
-
-Comment.belongsTo(User, {
-  foreignKey: "author_id",
-  as: "Author"
-});
 
 export default Comment;
