@@ -11,7 +11,7 @@ import assignmentRoutes from './routes/assigment.routes.js';
 import courseRoutes from './routes/course.routes.js';
 import enrollmentRoutes from './routes/enrollment.routes.js';
 import submissionRoutes from './routes/submission.routes.js';
-import commentsRoutes from './routes/comments.routes.js';
+import commentsRoutes from './routes/comment.routes.js';
 import sequelize from './config/db.js';
 import "./models/User.js";
 import "./models/Conversation.js";
