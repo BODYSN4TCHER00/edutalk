@@ -1,8 +1,6 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
 
-User.hasMany(Comment, { foreignKey: 'author_id' });
-
 //The user model for the db
 const User = sequelize.define(
   "User",
