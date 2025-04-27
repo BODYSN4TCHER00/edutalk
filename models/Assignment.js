@@ -17,23 +17,41 @@ const Assignment = sequelize.define(
 
     description: {
       type: DataTypes.STRING,
-       allowNull: false,
+      allowNull: false,
     },
 
     course_id: {
-        type: DataTypes.UUID,
-        references: {
-          model: "courses",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
+      type: DataTypes.UUID,
+      allowNull: false,
+      references: {
+        model: "courses",
+        key: "id",
+      },
+      onUpdate: "CASCADE",
+      onDelete: "CASCADE",
     },
 
     createdAt: {
       type: DataTypes.DATE,
-        defaultValue: Date.now(),
-        allowNull: false
+      defaultValue: Date.now(),
+      allowNull: false,
+    },
+
+    delivery_date: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+
+    status: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
+    },
+
+    assignment_type: {
+      type: DataTypes.ENUM("file", "quiz"),
+      allowNull: false,
+      defaultValue: "file",
     },
 
     file_url: {
@@ -41,23 +59,21 @@ const Assignment = sequelize.define(
       allowNull: true,
     },
 
-    delivery_date: {
-      type: DataTypes.DATE,
-      allowNull: false
+    quiz_id: {
+      type: DataTypes.UUID,
+      allowNull: true,
+      references: {
+        model: "quizzes",
+        key: "id",
+      },
+      onUpdate: "CASCADE",
+      onDelete: "SET NULL",
     },
-
-    status: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: true,
-    },
-    
   },
   {
     timestamps: false,
     tableName: "assignments",
-  },
+  }
 );
 
 export default Assignment;
-
