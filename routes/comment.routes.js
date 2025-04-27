@@ -1,4 +1,5 @@
 import express from "express";
+import User from "../models/User.js"; 
 import Comment from "../models/Comment.js";
 import { verifyToken } from "../config/jwt.js";
 
@@ -9,13 +10,25 @@ router.get("/assignment/:assignment_id", verifyToken, async (req, res) => {
   try {
     const comments = await Comment.findAll({
       where: { assignment_id: req.params.assignment_id },
-      include: [{
-        model: User,
-        attributes: ['id', 'name']
-      }],
-      order: [['createdAt', 'ASC']]
+      order: [["createdAt", "ASC"]],
+      raw: true
     });
-    res.json(comments);
+
+    // Obtener usuarios relacionados manualmente
+    const users = await User.findAll({
+      where: {
+        id: comments.map(c => c.author_id)
+      },
+      attributes: ['id', 'name'],
+      raw: true
+    });
+
+    const commentsWithAuthors = comments.map(comment => ({
+      ...comment,
+      Author: users.find(u => u.id === comment.author_id) || null
+    }));
+
+    res.json(commentsWithAuthors);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
